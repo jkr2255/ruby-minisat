@@ -24,6 +24,6 @@ end
 old_libs = $libs
 raise unless have_library("stdc++")
 if RbConfig::CONFIG['host_os'] =~ /mingw/
-  $libs = old_libs + ' Wl,-dn,-lstdc++'
+  $libs = old_libs + ' -Wl,-dn,-lstdc++'
 end
 create_makefile("minisat")
