@@ -21,7 +21,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include <errno.h>
 
 #include <signal.h>
-#include <zlib.h>
 #include <sys/resource.h>
 
 #include "utils/System.h"
@@ -71,7 +70,7 @@ static void SIGINT_exit(int signum) {
 int main(int argc, char** argv)
 {
     try {
-        setUsageHelp("USAGE: %s [options] <input-file> <result-output-file>\n\n  where input may be either in plain or gzipped DIMACS.\n");
+        setUsageHelp("USAGE: %s [options] <input-file> <result-output-file>\n\n  where input may be either in plain DIMACS.\n");
         // printf("This is MiniSat 2.0 beta\n");
         
 #if defined(__linux__)
@@ -126,7 +125,7 @@ int main(int argc, char** argv)
         if (argc == 1)
             printf("Reading from standard input... Use '--help' for help.\n");
 
-        gzFile in = (argc == 1) ? gzdopen(0, "rb") : gzopen(argv[1], "rb");
+        FILE* in = (argc == 1) ? fopen(0, "rb") : fopen(argv[1], "rb");
         if (in == NULL)
             printf("ERROR! Could not open file: %s\n", argc == 1 ? "<stdin>" : argv[1]), exit(1);
         
@@ -135,7 +134,7 @@ int main(int argc, char** argv)
             printf("|                                                                             |\n"); }
         
         parse_DIMACS(in, S);
-        gzclose(in);
+        fclose(in);
         FILE* res = (argc >= 3) ? fopen(argv[2], "wb") : NULL;
 
         if (S.verbosity > 0){
