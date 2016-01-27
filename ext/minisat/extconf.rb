@@ -20,5 +20,10 @@ unless system_minisat
   $objs = ["minisat.o", "minisat-wrap.o", minisat_include + "core/Solver.o"]
 end
 
+# Specify static linkage of C++ library for MinGW
+old_libs = $libs
 raise unless have_library("stdc++")
+if RbConfig::CONFIG['host_os'] =~ /mingw/
+  $libs = old_libs + ' Wl,-dn,-lstdc++'
+end
 create_makefile("minisat")
